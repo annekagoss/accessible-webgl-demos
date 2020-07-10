@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {"*": ["types/*"]},
+		"moduleResolution": "node",
+		"outDir": "./dist/",
+		"sourceMap": true,
+		"allowSyntheticDefaultImports": true,
+		"noImplicitAny": false,
+		"module": "es6",
+		"target": "es6",
+		"jsx": "react",
+		"lib": ["es5", "es6", "dom", "es2019"]
+	},
+	"include": ["./src/**/*", "./lib/**/*", "custom.d.ts"]
+}

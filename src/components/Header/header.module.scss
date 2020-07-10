@@ -1,0 +1,13 @@
+.header {
+	position: absolute;
+	right: 0;
+	padding-top: 10px;
+
+	img {
+		opacity: 0.5;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+}
