@@ -1,11 +1,12 @@
-import { Buffer, Buffers, FBO, Mesh, Matrix, Vector2, FaceArray, UniformSetting, UniformSettings, MESH_TYPE, UNIFORM_TYPE, LoadedShaders } from '../../types';
+import { Buffer, Buffers, FBO, FaceArray, LoadedShaders, MESH_TYPE, Matrix, Mesh, UNIFORM_TYPE, UniformSetting, UniformSettings, Vector2 } from '../../types';
+import { FAR_CLIPPING, FIELD_OF_VIEW, NEAR_CLIPPING } from './settings';
+import { applyPerspective, createMat4, lookAt } from './matrix';
+import { initBaseMeshBuffers, initBuffers, initMeshBuffersFromFaceArray } from './buffers';
+
 import { degreesToRadians } from './math';
-import { createMat4, applyPerspective, lookAt } from './matrix';
-import { NEAR_CLIPPING, FAR_CLIPPING, FIELD_OF_VIEW } from './settings';
+import { initFrameBufferObject } from './frameBuffer';
 import outlineFragmentSource from '../../lib/gl/shaders/outline.frag';
 import outlineVertexSource from '../../lib/gl/shaders/base.vert';
-import { initBaseMeshBuffers, initMeshBuffersFromFaceArray, initBuffers } from './buffers';
-import { initFrameBufferObject } from './frameBuffer';
 
 export interface InitializeProps {
 	gl: React.MutableRefObject<WebGLRenderingContext>;

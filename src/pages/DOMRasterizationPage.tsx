@@ -1,12 +1,13 @@
 import * as React from 'react';
+
 import { UNIFORM_TYPE, UniformSettings } from '../../types';
+
 import { BASE_UNIFORMS } from '../utils/general';
+import DOMRasterizationCanvas from '../components/DOMRasterizationCanvas/DOMRasterizationCanvas';
+import Section from '../components/Section/Section';
+import domRasterizationDiagram from '../assets/diagrams/5.0 Dom Rasterization.png';
 import initialRasterizationFragmentShader from '../../lib/gl/shaders/dom.frag';
 import initialRasterizationVertexShader from '../../lib/gl/shaders/base.vert';
-import Section from '../components/Section/Section';
-import DOMRasterizationCanvas from '../components/DOMRasterizationCanvas/DOMRasterizationCanvas';
-
-import domRasterizationDiagram from '../assets/diagrams/5.0 Dom Rasterization.png';
 
 interface Props {
 	isActive: boolean;

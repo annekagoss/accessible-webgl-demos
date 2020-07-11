@@ -1,4 +1,5 @@
-import { Materials, Texture, Material } from '../../types';
+import { Material, Materials, Texture } from '../../types';
+
 import { MAX_SUPPORTED_MATERIAL_TEXTURES } from './settings';
 
 interface LoadedImage {
@@ -11,6 +12,7 @@ export const loadTextures = async (gl: WebGLRenderingContext, uniformLocations: 
 	if (images && images !== {}) {
 		return loadImageTextures(gl, images).then((loadedTextures: Record<string, Texture>) => {
 			bindTextures(gl, uniformLocations, loadedTextures);
+			console.log({ loadedTextures });
 			return loadedTextures;
 		});
 	}
@@ -24,9 +26,9 @@ export const loadTextures = async (gl: WebGLRenderingContext, uniformLocations: 
 };
 
 export const loadImageTextures = async (gl: WebGLRenderingContext, images: Record<string, string>): Promise<Record<string, Texture>> => {
-	const promises: Promise<LoadedImage>[] = Object.keys(images).map(name => initTexture(name, 'diffuse', images[name]));
+	const promises: Promise<LoadedImage>[] = Object.keys(images).map((name) => initTexture(name, 'diffuse', images[name]));
 
-	return Promise.all(promises).then(loadedImages => {
+	return Promise.all(promises).then((loadedImages) => {
 		const loadedTextures: Record<string, Texture> = {};
 		loadedImages.forEach(({ name, image }: LoadedImage) => {
 			if (image && image.src) {
@@ -39,17 +41,17 @@ export const loadImageTextures = async (gl: WebGLRenderingContext, images: Recor
 
 export const loadMaterialTextures = (gl: WebGLRenderingContext, materials: Materials): Promise<Materials> => {
 	let promises: Promise<LoadedImage>[] = [];
-	Object.keys(materials).forEach(name => {
+	Object.keys(materials).forEach((name) => {
 		const { textures } = materials[name];
 		if (textures && textures !== {}) {
 			const matPromises: Promise<LoadedImage>[] = Object.keys(textures)
-				.filter(type => !!textures[type])
-				.map(type => initTexture(name, type, textures[type]));
+				.filter((type) => !!textures[type])
+				.map((type) => initTexture(name, type, textures[type]));
 			promises = promises.concat(matPromises);
 		}
 	});
 
-	return Promise.all(promises).then(loadedImages => {
+	return Promise.all(promises).then((loadedImages) => {
 		const loadedMaterials: Materials = materials;
 		loadedImages.forEach(({ name, type, image }: LoadedImage) => {
 			if (image && image.src) {
@@ -67,11 +69,11 @@ const initTexture = async (name: string, type: string, source: string): Promise<
 		const image = new Image();
 		image.crossOrigin = 'anonymous';
 		image.onload = () => resolve({ name, type, image });
-		image.onerror = e => reject(e);
+		image.onerror = (e) => reject(e);
 		image.src = source;
 	});
 
-const isPowerOf2 = value => (value & (value - 1)) === 0;
+const isPowerOf2 = (value) => (value & (value - 1)) === 0;
 
 export const createTexture = (gl, image): Texture => {
 	const level = 0;
@@ -91,7 +93,7 @@ export const createTexture = (gl, image): Texture => {
 	}
 	return {
 		texture,
-		textureSize: { x: image.width, y: image.height }
+		textureSize: { x: image.width, y: image.height },
 	};
 };
 
@@ -115,6 +117,7 @@ export const bindTextures = (gl, uniformLocations: Record<string, WebGLUniformLo
 			gl.activeTexture(gl[`TEXTURE${i}`] as number);
 			gl.bindTexture(gl.TEXTURE_2D, texture);
 			gl.uniform1i(uniformLocations[`uDiffuse${i}`], i);
+			console.log('bound to: ', i);
 		}
 	});
 };

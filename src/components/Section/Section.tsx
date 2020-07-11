@@ -1,9 +1,10 @@
 import * as React from 'react';
+
+import Inputs from '../Inputs/Inputs';
+import ShaderText from '../ShaderText/ShaderText';
+import { UniformSettings } from '../../../types';
 import cx from 'classnames';
 import styles from './Section.module.scss';
-import { UniformSettings } from '../../../types';
-import ShaderText from '../ShaderText/ShaderText';
-import Inputs from '../Inputs/Inputs';
 
 interface Props {
 	children: React.ReactNode;

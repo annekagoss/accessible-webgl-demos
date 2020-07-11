@@ -1,0 +1,47 @@
+.fullScreenCanvas {
+	width: 100vw;
+	height: 100vh;
+	min-height: 100vh;
+	min-width: 100vw;
+	max-height: 100vh;
+	max-width: 100vw;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	border: none;
+}
+
+.canvasContainer {
+	position: relative;
+	width: 100vw;
+	height: 100vh;
+}
+
+.canvasForeground {
+	opacity: 0;
+
+	&.sourceElement.cursorCopy {
+		opacity: 1;
+	}
+	&.sourceElement:not(.cursorCopy) {
+		visibility: hidden;
+	}
+
+	.noMotion & {
+		opacity: 1;
+
+		&.sourceElement:not(.cursorCopy) {
+			visibility: visible;
+		}
+	}
+}
+
+button {
+	cursor: pointer;
+}
+
+input {
+	outline: none;
+}

@@ -1,13 +1,16 @@
+import { FBO, UniformSettings, Vector2 } from '../../types';
+
 import { useEffect } from 'react';
-import { FBO, Vector2, UniformSettings } from '../../types';
 
 export const useWindowSize = (
 	canvas: React.MutableRefObject<HTMLCanvasElement>,
 	gl: React.MutableRefObject<WebGLRenderingContext>,
 	uniforms: UniformSettings,
-	size: React.MutableRefObject<Vector2>
+	size: React.MutableRefObject<Vector2>,
+	isFullScreen?: boolean
 ) => {
-	const handleResize = () => updateRendererSize(canvas, gl, uniforms, size);
+	console.log(isFullScreen);
+	const handleResize = () => updateRendererSize(canvas, gl, uniforms, size, isFullScreen);
 	useEffect(() => {
 		setTimeout(() => {
 			handleResize();
@@ -24,14 +27,17 @@ export const updateRendererSize = (
 	canvas: React.MutableRefObject<HTMLCanvasElement>,
 	gl: React.MutableRefObject<WebGLRenderingContext>,
 	uniforms: UniformSettings,
-	size: React.MutableRefObject<Vector2>
+	size: React.MutableRefObject<Vector2>,
+	isFullScreen?: boolean
 ) => {
 	if (!canvas.current || !gl.current) return;
-	const { width, height } = canvas.current.getBoundingClientRect();
+	const { width, height } = isFullScreen ? { width: window.innerWidth, height: window.innerHeight } : canvas.current.getBoundingClientRect();
+
 	size.current = {
 		x: width * window.devicePixelRatio,
 		y: height * window.devicePixelRatio,
 	};
+	console.log(size.current.y, height, isFullScreen);
 	canvas.current.width = size.current.x;
 	canvas.current.height = size.current.y;
 	uniforms.uResolution.value = size.current;

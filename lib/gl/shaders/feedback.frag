@@ -55,7 +55,7 @@ void main() {
   float frameBufferValue =
   texture2D(frameBufferTexture0, sampleCoordinate(st)).r * uAlpha;
   vec2 mouseSt = translateWithMouse(st);
-  float baseShape = circle(mouseSt, vec2(.5), .125, uResolution);
+  float baseShape = circle(mouseSt, vec2(.5), .125, uResolution, 0.0025);
 
   gl_FragColor = vec4(vec3(baseShape+frameBufferValue), 1.);
 }

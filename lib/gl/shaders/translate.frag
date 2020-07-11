@@ -30,7 +30,7 @@ void main() {
   vec2 circleSt = translateInCircle(st);
   vec2 mouseSt = translateWithMouse(st);
   float rect = rectangle(circleSt, uRectDimensions, uResolution);
-  float c = circle(mouseSt, vec2(.5), .25, uResolution);
+  float c = circle(mouseSt, vec2(.5), .25, uResolution, 0.0025);
   vec3 color = overlapForm(rect, c);
   gl_FragColor = vec4(color, 1.);
 }
