@@ -106,20 +106,21 @@ float c = outerNoiseC + circle(mouseSt, vec2(.5), .4, uResolution, 0.1);
   vec2 imageSt = gl_FragCoord.xy / uSamplerResolution0;
   
   imageSt.y = (uResolution.y / uSamplerResolution0.y) - imageSt.y - uScrollOffset.y;
+  vec2 imageSt1 = imageSt;
   
-  if (imageSt.y < .1) {
-	  imageSt.y = .1;
+  if (imageSt1.y < .1) {
+	  imageSt1.y = .1;
   }
   
-  if (imageSt.x < .1) {
-	  imageSt.x = .1;
+  if (imageSt1.x < .1) {
+	  imageSt1.x = .1;
   }
   
-  if (imageSt.x > .8) {
-	  imageSt.x = .8;
+  if (imageSt1.x > .8) {
+	  imageSt1.x = .8;
   }
-  if (imageSt.y > .9) {
-	  imageSt.y = .9;
+  if (imageSt1.y > .8) {
+	  imageSt1.y = .8;
   }
 
 	float noiseAmt = mix(10.0, 1.0, c);
@@ -128,12 +129,21 @@ float c = outerNoiseC + circle(mouseSt, vec2(.5), .4, uResolution, 0.1);
 	noiseCoordinate = (noiseCoordinate * 0.5) + 1.0;
 	
   imageSt = mix(imageSt, noiseCoordinate, .05);
+  
+	vec2 noiseCoordinate1 = (imageSt1 * 2.0) - 1.0;
+	noiseCoordinate1 *= noise * noiseAmt + .5;
+	noiseCoordinate1 = (noiseCoordinate1 * 0.5) + 1.0;
+	
+  imageSt1 = mix(imageSt1, noiseCoordinate1, .05);
 
   float backgroundLuminance = luminance(uColor, vec3(1.));
   float shift = MAX_SHIFT_AMT * noise * (1.0 - c);
+  imageSt = mix(imageSt1, imageSt, c);
   vec4 image = colorShift(uDiffuse0, shift, imageSt, 1.0);
-  vec4 image1 = colorShift(uDiffuse0, shift, imageSt, 1.0);
+//   vec4 image = colorShift(uDiffuse0, shift, imageSt, 1.0);
+//   vec4 image1 = colorShift(uDiffuse0, shift, imageSt1, 1.0);
   
-  gl_FragColor = mix(image1, image, c);
+//   gl_FragColor = mix(image1, image, c);
 // gl_FragColor = vec4(vec3(c), 1.);
+	gl_FragColor = image;
 }
