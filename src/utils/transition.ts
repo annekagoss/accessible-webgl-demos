@@ -1,5 +1,6 @@
-const SPEED = 0.001;
-const DURATION = 0.1;
+const DURATION = 50;
+
+const easeInOutSine = (time: number, duration: number) => -(Math.cos(Math.PI * (time / duration)) - 1) / 2;
 
 const easeInQuad = (time: number, initial: number, final: number, duration: number) => final * (time /= duration) * time + initial;
 
@@ -31,7 +32,7 @@ interface TransitionProps {
 export const updateTransitionProgress = (props: TransitionProps) => {
 	const { transitionTimeRef, isTransitioningRef } = props;
 	if (!isTransitioningRef.current) return;
-	if (transitionTimeRef.current >= DURATION - 0.05) {
+	if (transitionTimeRef.current >= DURATION) {
 		stopTransition(props);
 		return;
 	}
@@ -52,15 +53,15 @@ const stopTransition = ({ gl, uniformLocations, transitionTimeRef, slideIndexRef
 
 const animateTransition = ({ gl, uniformLocations, transitionTimeRef, transitionProgressRef, transitionDirectionRef, texturesRef }: TransitionProps) => {
 	if (transitionDirectionRef.current === 1) {
-		transitionProgressRef.current = easeOutCubic(transitionTimeRef.current, 0, 1, DURATION);
+		transitionProgressRef.current = easeInOutSine(transitionTimeRef.current, DURATION);
 	} else {
-		transitionProgressRef.current = 1.0 - easeOutCubic(transitionTimeRef.current, 0, 1, DURATION);
+		transitionProgressRef.current = 1.0 - easeInOutSine(transitionTimeRef.current, DURATION);
 		if (transitionProgressRef.current === 1) {
 			texturesRef.current = rotateArray(texturesRef.current, transitionDirectionRef.current);
 			bindTextures(gl.current, texturesRef.current.slice(0, 2), uniformLocations.current);
 		}
 	}
-	transitionTimeRef.current += SPEED;
+	transitionTimeRef.current += 1;
 };
 
 const rotateArray = (array: Array<any>, direction: number): Array<any> => {

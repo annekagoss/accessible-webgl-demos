@@ -9,7 +9,6 @@ export const useWindowSize = (
 	size: React.MutableRefObject<Vector2>,
 	isFullScreen?: boolean
 ) => {
-	console.log(isFullScreen);
 	const handleResize = () => updateRendererSize(canvas, gl, uniforms, size, isFullScreen);
 	useEffect(() => {
 		setTimeout(() => {

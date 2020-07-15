@@ -1,0 +1,42 @@
+.fullScreenCanvas {
+	width: 804px;
+	height: calc((1700px * 0.5) - 40px);
+	max-width: calc(804px);
+	max-height: calc((1700px * 0.5) - 40px);
+	min-width: calc(804px);
+	min-height: calc((1700px * 0.5) - 40px);
+	border: none;
+	position: relative;
+}
+
+.canvasContainer {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 40px;
+}
+
+.canvasForeground {
+	position: absolute;
+	display: flex;
+	pointer-events: none;
+	width: 1000px;
+	justify-content: space-between;
+}
+
+.button {
+	font-family: 'Roboto', 'Arial', sans-serif;
+	font-weight: 300;
+	font-size: 40px;
+	color: black;
+	padding: 60px;
+	cursor: pointer;
+	pointer-events: all;
+	user-select: none;
+	background-color: transparent;
+	line-height: 0;
+	border: none;
+	outline: none;
+}

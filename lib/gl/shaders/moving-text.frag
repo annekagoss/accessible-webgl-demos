@@ -101,7 +101,6 @@ void main() {
   outerNoiseC *= outerNoiseC;
 //   mouseSt = mix(mouseSt, noise, 1.0 - circle(mouseSt, vec2(.5), .125, uResolution, 0.1));
 float c = outerNoiseC + circle(mouseSt, vec2(.5), .4, uResolution, 0.1);
-  
 
   vec2 imageSt = gl_FragCoord.xy / uSamplerResolution0;
   
@@ -140,10 +139,5 @@ float c = outerNoiseC + circle(mouseSt, vec2(.5), .4, uResolution, 0.1);
   float shift = MAX_SHIFT_AMT * noise * (1.0 - c);
   imageSt = mix(imageSt1, imageSt, c);
   vec4 image = colorShift(uDiffuse0, shift, imageSt, 1.0);
-//   vec4 image = colorShift(uDiffuse0, shift, imageSt, 1.0);
-//   vec4 image1 = colorShift(uDiffuse0, shift, imageSt1, 1.0);
-  
-//   gl_FragColor = mix(image1, image, c);
-// gl_FragColor = vec4(vec3(c), 1.);
 	gl_FragColor = image;
 }
