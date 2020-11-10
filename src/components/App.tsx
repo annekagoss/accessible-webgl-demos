@@ -5,14 +5,14 @@ import * as React from 'react';
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
 import Loader from './Loader/Loader';
-import MovingText from './MovingText/MovingText';
+import Background from './Background/Background';
 import PixelCarousel from './PixelCarousel/PixelCarousel';
 import cx from 'classnames';
 import { glSupported } from '../utils/general';
 import styles from './app.module.scss';
 
 const App = () => {
-	const [activePageIndex, setActivePageIndex] = React.useState<number>(1);
+	const [activePageIndex, setActivePageIndex] = React.useState<number>(0);
 	const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
 	if (!glSupported()) return <div>'WebGL is not supported on this device.'</div>;
 
@@ -66,8 +66,7 @@ interface PagesProps {
 
 const Pages = ({ activePageIndex }: PagesProps) => (
 	<>
-		{activePageIndex === 0 && <MovingText />}
-		{activePageIndex === 1 && <PixelCarousel />}
+		{activePageIndex === 0 && <Background/>}
 	</>
 );
 
