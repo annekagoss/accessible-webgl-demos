@@ -1,6 +1,6 @@
-import { FBO, UniformSettings, Vector2 } from '../../types';
+import {UniformSettings, Vector2} from '../../types';
 
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 
 export const useWindowSize = (
 	canvas: React.MutableRefObject<HTMLCanvasElement>,
@@ -30,7 +30,9 @@ export const updateRendererSize = (
 	isFullScreen?: boolean
 ) => {
 	if (!canvas.current || !gl.current) return;
-	const { width, height } = isFullScreen ? { width: window.innerWidth, height: window.innerHeight } : canvas.current.getBoundingClientRect();
+	const {width, height} = isFullScreen
+		? {width: window.innerWidth, height: window.innerHeight}
+		: canvas.current.getBoundingClientRect();
 
 	size.current = {
 		x: width * window.devicePixelRatio,

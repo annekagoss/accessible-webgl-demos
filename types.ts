@@ -82,6 +82,12 @@ export interface RGBA extends RGB {
 	a: number;
 }
 
+export interface HSL {
+	h: number;
+	s: number;
+	l: number;
+}
+
 export enum AxisName {
 	x = 'x',
 	y = 'y',

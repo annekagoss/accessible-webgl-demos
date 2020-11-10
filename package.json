@@ -108,7 +108,6 @@
 		"react-ace": "^8.1.0",
 		"source-map-loader": "^0.2.4",
 		"styled-components": "^5.2.1",
-		"three": "^0.109.0",
 		"url-loader": "^1.1.2"
 	}
 }

@@ -11,6 +11,7 @@ import fragmentShader from '../../../lib/gl/shaders/gx.frag';
 import AccessibleContrast from '../AccessibleContrast/AccessibleContrast';
 
 import styles from './Background.module.scss';
+import {TorusGeometry, Vector3} from 'three';
 
 interface Props {}
 
@@ -31,6 +32,41 @@ const INITIAL_UNIFORMS: UniformSettings = {
 		readonly: true,
 		type: UNIFORM_TYPE.FLOAT_1,
 		value: 0,
+	},
+	uTextColor: {
+		defaultValue: {x: 0, y: 0, z: 0},
+		name: 'uTextColor',
+		readonly: true,
+		type: UNIFORM_TYPE.VEC_3,
+		value: {x: 0, y: 0, z: 0},
+	},
+	uContrastLevel: {
+		defaultValue: 0,
+		name: 'uContrastLevel',
+		readonly: true,
+		type: UNIFORM_TYPE.INT_1,
+		value: 0,
+	},
+	uColor1: {
+		defaultValue: {x: 255, y: 162, z: 0},
+		name: 'uColor1',
+		readonly: true,
+		type: UNIFORM_TYPE.VEC_3,
+		value: {x: 255, y: 162, z: 0},
+	},
+	uColor2: {
+		defaultValue: {x: 255, y: 0, z: 0},
+		name: 'uColor2',
+		readonly: true,
+		type: UNIFORM_TYPE.VEC_3,
+		value: {x: 255, y: 0, z: 0},
+	},
+	uColor3: {
+		defaultValue: {x: 0, y: 0, z: 255},
+		name: 'uColor3',
+		readonly: true,
+		type: UNIFORM_TYPE.VEC_3,
+		value: {x: 0, y: 0, z: 255},
 	},
 };
 
@@ -90,7 +126,7 @@ const BaseCanvas = () => {
 
 	return (
 		<div className={styles.canvasContainer}>
-			<AccessibleContrast size={size} ref={canvasRef} />
+			<AccessibleContrast size={size} ref={canvasRef} uniforms={uniforms} />
 		</div>
 	);
 };

@@ -5,7 +5,7 @@ import {FormControl, FormLabel} from '@material-ui/core';
 import styles from './ContrastForm.module.scss';
 import './Colors.scss';
 
-interface RGB {
+export interface RGB {
 	r: number;
 	g: number;
 	b: number;

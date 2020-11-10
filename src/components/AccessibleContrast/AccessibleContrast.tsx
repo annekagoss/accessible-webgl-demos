@@ -1,30 +1,42 @@
-import React, {forwardRef} from 'react';
-import {Vector2} from '../../../types';
+import React, {forwardRef, useCallback} from 'react';
+import {UniformSettings, Vector2} from '../../../types';
 import ContrastForm from './ContrastForm/ContrastForm';
 
 import styles from './AccessibleContrast.module.scss';
 
 interface Props {
-	Foreground?: React.FC;
 	size: React.MutableRefObject<Vector2>;
+	uniforms: React.MutableRefObject<UniformSettings>;
 }
 
-const AccessibleContrast = forwardRef((props: Props, ref: React.RefObject<HTMLCanvasElement>) => {
-	const {size, Foreground = ContrastForm} = props;
+const AccessibleContrast = forwardRef(
+	({size, uniforms}: Props, ref: React.RefObject<HTMLCanvasElement>) => {
+		const updateUniform = useCallback(
+			(name: string, value: any) => {
+				uniforms.current = {
+					...uniforms.current,
+					[name]: {
+						...uniforms.current[name],
+						value,
+					},
+				};
+			},
+			[uniforms]
+		);
 
-	console.log({styles});
-	return (
-		<>
-			<canvas
-				ref={ref}
-				width={size.current.x}
-				height={size.current.y}
-				className={styles.fullScreenCanvas}
-				role='img'
-			/>
-			<Foreground />
-		</>
-	);
-});
+		return (
+			<>
+				<canvas
+					ref={ref}
+					width={size.current.x}
+					height={size.current.y}
+					className={styles.fullScreenCanvas}
+					role='img'
+				/>
+				<ContrastForm updateUniform={updateUniform} />
+			</>
+		);
+	}
+);
 
 export default AccessibleContrast;

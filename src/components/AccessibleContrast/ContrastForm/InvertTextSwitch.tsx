@@ -21,9 +21,6 @@ const InvertTextSwitch = ({invertedText, setInvertedText}: Props) => (
 						track: styles.switchTrack,
 					}}
 					onChange={(_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-						checked
-							? document.querySelector('#root').classList.add('inverted')
-							: document.querySelector('#root').classList.remove('inverted');
 						setInvertedText(checked);
 					}}
 				/>

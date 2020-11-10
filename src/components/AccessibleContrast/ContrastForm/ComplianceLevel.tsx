@@ -5,7 +5,6 @@ import styles from './ContrastForm.module.scss';
 
 export enum COMPLIANCE_LEVEL {
 	NONE = 'NONE',
-	A = 'A',
 	AA = 'AA',
 	AAA = 'AAA',
 }
