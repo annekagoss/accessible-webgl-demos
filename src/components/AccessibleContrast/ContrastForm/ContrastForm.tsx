@@ -63,11 +63,11 @@ const ControlForm = ({updateUniform}: Props) => {
 				color3={color3}
 				setColor3={setColor3}
 			/>
-			<ColorRatioCalc
+			{/* <ColorRatioCalc
 				foregroundColor={invertedText ? {r: 255, g: 255, b: 255} : {r: 0, g: 0, b: 0}}
 				backgroundColor={color1}
 				complianceLevel={complianceLevel}
-			/>
+			/> */}
 		</div>
 	);
 };

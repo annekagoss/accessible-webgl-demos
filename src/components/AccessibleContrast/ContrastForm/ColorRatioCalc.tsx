@@ -33,13 +33,13 @@ const newLuminance = (fg: number, target: number, up: boolean): number => {
 	return (fg + 0.05 - target * 0.05) / target;
 };
 
-const lightenBackground = (fgl: number, bgl: number) => {
+const shouldLightenBackground = (fgl: number, bgl: number) => {
 	if (fgl === bgl) return bgl < 50;
 	return bgl > fgl;
 };
 
 const shift = (bghsl: HSL, fgl: number, targetRatio: number): RGB => {
-	const up = lightenBackground(fgl, bghsl.l);
+	const up = shouldLightenBackground(fgl, bghsl.l);
 
 	bghsl.l = newLuminance(fgl / 100, targetRatio, up) * 100;
 

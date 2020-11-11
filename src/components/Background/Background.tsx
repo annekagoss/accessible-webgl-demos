@@ -40,9 +40,9 @@ const INITIAL_UNIFORMS: UniformSettings = {
 		type: UNIFORM_TYPE.VEC_3,
 		value: {x: 0, y: 0, z: 0},
 	},
-	uContrastLevel: {
+	uComplianceLevel: {
 		defaultValue: 0,
-		name: 'uContrastLevel',
+		name: 'uComplianceLevel',
 		readonly: true,
 		type: UNIFORM_TYPE.INT_1,
 		value: 0,
