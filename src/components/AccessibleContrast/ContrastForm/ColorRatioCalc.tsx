@@ -1,3 +1,4 @@
+import {HSL} from '../../../../types';
 import React, {useState, useEffect} from 'react';
 import {cssColor, HSLToRGB, RGBToHSL} from '../../../utils/color';
 
@@ -16,8 +17,6 @@ const minComplianceRatio = {
 	[COMPLIANCE_LEVEL.AAA]: 7,
 };
 
-const luminance = ({r, g, b}: RGB) => r * 0.2126 + g * 0.7152 + b * 0.0722;
-
 const contrastRatio = (bgLum: number, fgLum: number): number => {
 	const l1 = bgLum + 0.05;
 	const l2 = fgLum + 0.05;
@@ -26,39 +25,35 @@ const contrastRatio = (bgLum: number, fgLum: number): number => {
 	return ratio;
 };
 
-const checkContrast = (bg: number, fg: number, targetRatio: number) => {
-	const ratio = contrastRatio(bg, fg);
-	return Math.abs(ratio) >= targetRatio;
+const newLuminance = (fg: number, target: number, up: boolean): number => {
+	if (up) {
+		const val = target * (fg + 0.05);
+		return val - 0.05;
+	}
+	return (fg + 0.05 - target * 0.05) / target;
 };
 
-const shift = (bg: RGB, fg: RGB, ratio: number, targetRatio: number): RGB => {
-	const bghsl = RGBToHSL(bg);
-	const fghsl = RGBToHSL(fg);
-	const up = bghsl.l > fghsl.l;
+const lightenBackground = (fgl: number, bgl: number) => {
+	if (fgl === bgl) return bgl < 50;
+	return bgl < fgl;
+};
 
-	while (
-		!checkContrast(bghsl.l / 100, fghsl.l / 100, targetRatio) &&
-		bghsl.l <= 100 &&
-		bghsl.l >= 0
-	) {
-		if (up) {
-			bghsl.l += 1;
-		} else {
-			bghsl.l -= 1;
-		}
-	}
+const shift = (bghsl: HSL, fgl: number, targetRatio: number): RGB => {
+	const up = lightenBackground(fgl, bghsl.l);
+
+	bghsl.l = newLuminance(fgl / 100, targetRatio, up) * 100;
 
 	return HSLToRGB(bghsl);
 };
 
 const makeColorAccessible = (bg: RGB, fg: RGB, complianceLevel: COMPLIANCE_LEVEL): RGB => {
 	if (complianceLevel === COMPLIANCE_LEVEL.NONE) return bg;
-	const bgLuminance = luminance(bg);
-	const fgLuminance = luminance(fg);
-	const ratio = contrastRatio(bgLuminance, fgLuminance);
+	const bghsl = RGBToHSL(bg);
+	const fghsl = RGBToHSL(fg);
+	const ratio = contrastRatio(bghsl.l, fghsl.l);
 	const targetRatio = minComplianceRatio[complianceLevel];
 	if (ratio >= targetRatio) return bg;
-	return shift(bg, fg, ratio, targetRatio);
+	return shift(bghsl, fghsl.l, targetRatio);
 };
 
 const ColorRatioCalc = ({foregroundColor, backgroundColor, complianceLevel}: Props) => {
