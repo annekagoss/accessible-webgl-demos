@@ -6,7 +6,7 @@ import ComplianceLevel, {COMPLIANCE_LEVEL} from './ComplianceLevel';
 import Colors, {RGB} from './Colors';
 
 import styles from './ContrastForm.module.scss';
-import ColorRatioCalc from './ColorRatioCalc';
+// import ColorRatioCalc from './ColorRatioCalc';
 import {normalizeRGB} from '../../../utils/color';
 
 interface Props {
@@ -21,7 +21,7 @@ const mapComplianceLevelToInt = {
 
 const ControlForm = ({updateUniform}: Props) => {
 	const [complianceLevel, setComplianceLevel] = useState<COMPLIANCE_LEVEL>(COMPLIANCE_LEVEL.AAA);
-	const [invertedText, setInvertedText] = useState<boolean>(false);
+	const [invertedText, setInvertedText] = useState<boolean>(true);
 	const [color1, setColor1] = useState<RGB>({r: 255, g: 162, b: 0});
 	const [color2, setColor2] = useState<RGB>({r: 255, g: 0, b: 0});
 	const [color3, setColor3] = useState<RGB>({r: 0, g: 0, b: 255});

@@ -3,7 +3,7 @@ precision mediump float;
 #endif
 
 #define CENTER vec2(0.5)
-#define BACKGROUND vec3(1.0)
+#define BACKGROUND vec3(.9)
 #define CIRCLE_COLOR_1 vec3(1.0, 0.6353, 0.0)
 #define CIRCLE_COLOR_2 vec3(1, 0, 0)
 #define CIRCLE_COLOR_3 vec3(0, 0, 1)
@@ -61,5 +61,5 @@ void main() {
 
     circleColor = makeColorAccessible(circleColor, uTextColor, uComplianceLevel);
 
-	gl_FragColor = vec4(circleColor, 1.);
+	gl_FragColor = vec4(circleColor, 1.0);
 }

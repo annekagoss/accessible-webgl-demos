@@ -63,7 +63,7 @@ float newLuminance(float fgl, float target, bool up) {
 
 vec3 shift(vec3 bghsl, float fgl, float targetRatio) {
 	bool up = shouldLightenBackground(bghsl.z, fgl);
-	bghsl.z = newLuminance(fgl, targetRatio, up);
+  bghsl.z = newLuminance(fgl, targetRatio, up);
 	return hslTorgb(bghsl);
 }
 
@@ -75,7 +75,7 @@ vec3 makeColorAccessible(vec3 bg, vec3 fg, int complianceLevel) {
 	float targetRatio = minComplianceRatio(complianceLevel);
 	if (ratio >= targetRatio) return bg;
 	vec3 newColor = shift(bghsl, fghsl.z, targetRatio);
-	float shiftAmount = clamp((1.0 - ratio/targetRatio) * 2.0, 0.0, 1.0);
+	float shiftAmount = clamp((1.0 - ratio/targetRatio), 0.0, 1.0);
 	return mix(bg, newColor, shiftAmount);
 }
 
