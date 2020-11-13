@@ -7,9 +7,11 @@ import Header from './Header/Header';
 import Loader from './Loader/Loader';
 import Background from './Background/Background';
 import PixelCarousel from './PixelCarousel/PixelCarousel';
+import DomRasterizationCanvas from './DOMRasterizationCanvas/DOMRasterizationCanvas';
 import cx from 'classnames';
-import { glSupported } from '../utils/general';
+import {glSupported} from '../utils/general';
 import styles from './app.module.scss';
+import DOMRasterizationCanvas from './DOMRasterizationCanvas/DOMRasterizationCanvas';
 
 const App = () => {
 	const [activePageIndex, setActivePageIndex] = React.useState<number>(0);
@@ -27,7 +29,8 @@ const App = () => {
 			className={styles.app}
 			onScroll={() => {
 				console.log('app');
-			}}>
+			}}
+		>
 			{isLoaded && (
 				<>
 					{/* <Header />
@@ -46,14 +49,15 @@ interface NavProps {
 	setActivePageIndex: (index: number) => void;
 }
 
-const Nav = ({ activePageIndex, setActivePageIndex }: NavProps) => (
+const Nav = ({activePageIndex, setActivePageIndex}: NavProps) => (
 	<nav className={styles.navigation}>
 		<ul>
 			<div
 				className={cx(styles.navItem, activePageIndex === 0 && styles.active)}
 				onClick={() => {
 					setActivePageIndex(0);
-				}}>
+				}}
+			>
 				Moving Text
 			</div>
 		</ul>
@@ -64,9 +68,10 @@ interface PagesProps {
 	activePageIndex: number;
 }
 
-const Pages = ({ activePageIndex }: PagesProps) => (
+const Pages = ({activePageIndex}: PagesProps) => (
 	<>
-		{activePageIndex === 0 && <Background/>}
+		{activePageIndex === 0 && <Background />}
+		{/* {activePageIndex === 1 && <DOMRasterizationCanvas />} */}
 	</>
 );
 

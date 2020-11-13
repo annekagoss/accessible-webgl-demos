@@ -67,6 +67,11 @@ vec3 shift(vec3 bghsl, float fgl, float targetRatio) {
 	return hslTorgb(bghsl);
 }
 
+vec3 reduceBanding(vec3 originalColor, vec3 newColor, float ratio, float targetRatio) {
+  float shiftAmount = clamp((1.0 - ratio/targetRatio) * 3.0, 0.0, 1.0);
+  return mix(originalColor, newColor, shiftAmount);
+}
+
 vec3 makeColorAccessible(vec3 bg, vec3 fg, int complianceLevel) {
 	if (complianceLevel == 0) return bg;
 	vec3 bghsl = rgbTohsl(bg);
@@ -75,8 +80,7 @@ vec3 makeColorAccessible(vec3 bg, vec3 fg, int complianceLevel) {
 	float targetRatio = minComplianceRatio(complianceLevel);
 	if (ratio >= targetRatio) return bg;
 	vec3 newColor = shift(bghsl, fghsl.z, targetRatio);
-	float shiftAmount = clamp((1.0 - ratio/targetRatio), 0.0, 1.0);
-	return mix(bg, newColor, shiftAmount);
+	return reduceBanding(bg, newColor, ratio, targetRatio);
 }
 
 #pragma glslify:export(makeColorAccessible)
