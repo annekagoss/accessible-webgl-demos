@@ -6,12 +6,10 @@ import Footer from './Footer/Footer';
 import Header from './Header/Header';
 import Loader from './Loader/Loader';
 import Background from './Background/Background';
-import PixelCarousel from './PixelCarousel/PixelCarousel';
-import DomRasterizationCanvas from './DOMRasterizationCanvas/DOMRasterizationCanvas';
+import RasterizedForm from './RasterizedForm/RasterizedForm';
 import cx from 'classnames';
 import {glSupported} from '../utils/general';
 import styles from './app.module.scss';
-import DOMRasterizationCanvas from './DOMRasterizationCanvas/DOMRasterizationCanvas';
 
 const App = () => {
 	const [activePageIndex, setActivePageIndex] = React.useState<number>(0);
@@ -33,10 +31,13 @@ const App = () => {
 		>
 			{isLoaded && (
 				<>
-					{/* <Header />
-					<Nav activePageIndex={activePageIndex} setActivePageIndex={setActivePageIndex} /> */}
+					<Header />
+					<Nav
+						activePageIndex={activePageIndex}
+						setActivePageIndex={setActivePageIndex}
+					/>
 					<Pages activePageIndex={activePageIndex} />
-					{/* <Footer /> */}
+					<Footer />
 				</>
 			)}
 			{!isLoaded && <Loader />}
@@ -58,7 +59,15 @@ const Nav = ({activePageIndex, setActivePageIndex}: NavProps) => (
 					setActivePageIndex(0);
 				}}
 			>
-				Moving Text
+				Auto-Enforced Contrast Ratio
+			</div>
+			<div
+				className={cx(styles.navItem, activePageIndex === 1 && styles.active)}
+				onClick={() => {
+					setActivePageIndex(1);
+				}}
+			>
+				Rasterized Form
 			</div>
 		</ul>
 	</nav>
@@ -71,7 +80,7 @@ interface PagesProps {
 const Pages = ({activePageIndex}: PagesProps) => (
 	<>
 		{activePageIndex === 0 && <Background />}
-		{/* {activePageIndex === 1 && <DOMRasterizationCanvas />} */}
+		{activePageIndex === 1 && <RasterizedForm />}
 	</>
 );
 

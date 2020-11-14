@@ -1,15 +1,14 @@
 .fullScreenCanvas {
-	width: calc(100vw - 4rem);
-	height: calc((100vw - 4rem) / 3 * 2);
-	max-width: calc(100vw - 4rem);
-	max-height: calc((100vw - 4rem) / 3 * 2);
-	min-width: 100%;
-	min-height: 100%;
+	width: 100vw;
+	height: 100vh;
+	min-height: 100vh;
+	border: none;
 	position: relative;
 }
 
 .canvasContainer {
 	position: relative;
+	max-height: 100vh;
 }
 
 .canvasForeground {

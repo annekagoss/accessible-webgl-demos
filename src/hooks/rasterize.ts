@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { InitializeProps } from '../../lib/gl/initialize';
-import { initializeGL } from './gl';
-import { loadTextures } from '../../lib/gl/textureLoader';
+import {InitializeProps} from '../../lib/gl/initialize';
+import {initializeGL} from './gl';
+import {loadTextures} from '../../lib/gl/textureLoader';
 import sangbleuKingdom from '../assets/fonts/sangbleuKingdom';
-import { throttle } from './helpers';
+import {throttle} from './helpers';
 import univers from '../assets/fonts/univers';
 
 interface RasterizeToGLProps {
@@ -32,6 +32,7 @@ export const useRasterizeToGL = (props: RasterizeToGLProps) => {
 			props.cursorElementRef.current.addEventListener('mousemove', refreshImageOnEvent);
 			props.cursorElementRef.current.addEventListener('keydown', refreshImageOnEvent);
 			props.cursorElementRef.current.addEventListener('keyup', refreshImageOnEvent);
+
 			mouseUpHandler = () => {
 				setTimeout(() => {
 					refreshImageOnEvent();
@@ -47,7 +48,10 @@ export const useRasterizeToGL = (props: RasterizeToGLProps) => {
 		}, 0);
 		return () => {
 			if (props.reloadOnInteraction) {
-				props.cursorElementRef.current.removeEventListener('mousemove', refreshImageOnEvent);
+				props.cursorElementRef.current.removeEventListener(
+					'mousemove',
+					refreshImageOnEvent
+				);
 				props.cursorElementRef.current.removeEventListener('keydown', refreshImageOnEvent);
 				props.cursorElementRef.current.removeEventListener('keyup', refreshImageOnEvent);
 				props.cursorElementRef.current.removeEventListener('mouseup', mouseUpHandler);
@@ -62,20 +66,34 @@ export const useRasterizeToGL = (props: RasterizeToGLProps) => {
 	}, props.reloadOnChange);
 };
 
-const refreshImage = async ({ sourceElementRef, imageTexturesRef, initializeGLProps, useDevicePixelRatio }: RasterizeToGLProps) => {
+const refreshImage = async ({
+	sourceElementRef,
+	imageTexturesRef,
+	initializeGLProps,
+	useDevicePixelRatio,
+}: RasterizeToGLProps) => {
 	const result = await rasterizeElement(sourceElementRef.current, useDevicePixelRatio);
 	if (!result) return;
-	const { DOMImage, size } = result;
-	imageTexturesRef.current = { DOMImage };
+	const {DOMImage, size} = result;
+	imageTexturesRef.current = {DOMImage};
 	initializeGLProps.uniforms.uSamplerResolution0.value = size;
-	loadTextures(initializeGLProps.gl.current, initializeGLProps.uniformLocations.current, imageTexturesRef.current);
+	loadTextures(
+		initializeGLProps.gl.current,
+		initializeGLProps.uniformLocations.current,
+		imageTexturesRef.current
+	);
 };
 
-const rasterizeElementAndInitializeGL = async ({ sourceElementRef, imageTexturesRef, initializeGLProps, useDevicePixelRatio }: RasterizeToGLProps) => {
+const rasterizeElementAndInitializeGL = async ({
+	sourceElementRef,
+	imageTexturesRef,
+	initializeGLProps,
+	useDevicePixelRatio,
+}: RasterizeToGLProps) => {
 	const rasterResult = await rasterizeElement(sourceElementRef.current, useDevicePixelRatio);
 	if (!rasterResult) return;
-	const { DOMImage, size } = rasterResult;
-	imageTexturesRef.current = { DOMImage };
+	const {DOMImage, size} = rasterResult;
+	imageTexturesRef.current = {DOMImage};
 	initializeGLProps.uniforms.uSamplerResolution0.value = size;
 
 	initializeGLProps.imageTextures = imageTexturesRef.current;
@@ -84,7 +102,7 @@ const rasterizeElementAndInitializeGL = async ({ sourceElementRef, imageTextures
 
 const rasterizeElement = async (sourceElement: HTMLElement, useDevicePixelRatio: boolean) => {
 	if (!sourceElement) return;
-	const { width, height } = sourceElement.getBoundingClientRect();
+	const {width, height} = sourceElement.getBoundingClientRect();
 	const SVGDataURI = makeSVGDataURI(sourceElement, width, height);
 	const image: HTMLImageElement = await createImageFromURI(SVGDataURI);
 	const canvas: HTMLCanvasElement = document.createElement('canvas');

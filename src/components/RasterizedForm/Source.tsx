@@ -2,7 +2,7 @@ import * as React from 'react';
 import cx from 'classnames';
 import {UniformSettings, RGBA} from '../../../types';
 import {parseColorFromString, luminanceFromRGBA} from '../../utils/color';
-import styles from './DOMRasterizationCanvas.module.scss';
+import styles from './RasterizedForm.module.scss';
 
 interface SourceElementProps {
 	isCursorCopy?: boolean;
@@ -13,6 +13,7 @@ interface SourceElementProps {
 	inputFocused: boolean;
 	setInputFocused?: (val: boolean) => void;
 	contrastColor: string;
+	windowWidth: number;
 }
 
 interface SourceProps {
@@ -30,21 +31,29 @@ const SourceElement = React.forwardRef(
 			setText,
 			contrastColor,
 			isCursorCopy = false,
+			windowWidth,
 		}: SourceElementProps,
 		ref: React.RefObject<HTMLDivElement>
 	) => {
 		const buttonRef: React.RefObject<HTMLButtonElement> = React.useRef<HTMLButtonElement>();
 		const textColor: string = isCursorCopy ? 'transparent' : contrastColor;
 		const buttonBorder: string = isCursorCopy
-			? 'solid 1px transparent'
-			: `solid 1px ${contrastColor}`;
+			? 'solid 8px transparent'
+			: `solid 8px ${contrastColor}`;
 		const contrastColorOpposite: string = contrastColor === 'white' ? 'black' : 'white';
 		const hoverButtonColor: string = isCursorCopy ? 'transparent' : contrastColorOpposite;
 		const buttonColor: string = buttonActive ? hoverButtonColor : textColor;
 		const buttonBackground: string = buttonActive ? textColor : 'transparent';
 		const inputBorder: string = inputFocused
-			? `solid 1px ${textColor}`
-			: 'solid 1px transparent';
+			? `solid 8px ${textColor}`
+			: 'solid 8px transparent';
+		const pointerEvents = isCursorCopy ? 'all' : 'none';
+		const fontSize = windowWidth < 975 ? 30 : 50;
+		const horizontalBorder = windowWidth < 975 ? 60 : '17%';
+		const verticalBorder = windowWidth < 975 ? 60 : '5%';
+		const inputWidth = windowWidth < 975 ? 'auto' : 500;
+		const titleSize = windowWidth < 975 ? 50 : 90;
+		const padding = windowWidth < 975 ? '18%' : 0;
 
 		return (
 			<div
@@ -65,12 +74,22 @@ const SourceElement = React.forwardRef(
 					alignItems: 'center',
 					margin: 0,
 					padding: 0,
+					pointerEvents,
 				}}
 			>
 				<div
 					style={{
-						padding: 0,
+						padding,
 						margin: 0,
+						position: 'absolute',
+						top: verticalBorder,
+						bottom: verticalBorder,
+						left: horizontalBorder,
+						right: horizontalBorder,
+						border: buttonBorder,
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
 					}}
 				>
 					<form
@@ -78,13 +97,14 @@ const SourceElement = React.forwardRef(
 							display: 'flex',
 							flexDirection: 'column',
 							alignItems: 'flex-start',
+							maxWidth: '100%',
 						}}
 					>
 						<label
 							htmlFor={'color-field'}
 							style={{
-								marginBottom: 80,
-								fontSize: 40,
+								marginBottom: 60,
+								fontSize: titleSize,
 								color: textColor,
 								lineHeight: 1,
 								fontFamily: 'Roboto, sans-serif',
@@ -92,13 +112,15 @@ const SourceElement = React.forwardRef(
 								letterSpacing: 1,
 							}}
 						>
-							type a color
+							Type a color
 						</label>
 						<input
 							type='text'
 							id='color-field'
+							spellCheck='false'
 							style={{
-								width: 200,
+								width: windowWidth < 975 ? '100%' : 'auto',
+								minWidth: inputWidth,
 								backgroundColor: 'transparent',
 								borderTop: inputBorder,
 								borderRight: inputBorder,
@@ -106,8 +128,7 @@ const SourceElement = React.forwardRef(
 								borderLeft: inputBorder,
 								color: textColor,
 								caretColor: 'transparent',
-								fontSize: 40,
-								minWidth: 500,
+								fontSize: fontSize,
 								padding: '8px 20px',
 								fontFamily: 'Roboto, sans-serif',
 								lineHeight: 1,
@@ -120,8 +141,12 @@ const SourceElement = React.forwardRef(
 								if (!isCursorCopy) return;
 								setText && setText(e.target.value);
 							}}
-							onFocus={() => setInputFocused && setInputFocused(true)}
-							onBlur={() => setInputFocused && setInputFocused(false)}
+							onFocus={() => {
+								setInputFocused && setInputFocused(true);
+							}}
+							onBlur={() => {
+								setInputFocused && setInputFocused(false);
+							}}
 						/>
 						<button
 							ref={buttonRef}
@@ -129,11 +154,11 @@ const SourceElement = React.forwardRef(
 								background: buttonBackground,
 								border: buttonBorder,
 								color: buttonColor,
-								fontSize: 28,
+								fontSize: fontSize,
 								fontFamily: 'Roboto, sans-serif',
 								lineHeight: 1,
 								fontWeight: 'bold',
-								padding: '10px 20px',
+								padding: '30px 40px',
 								letterSpacing: 1,
 							}}
 							type='button'
@@ -141,8 +166,7 @@ const SourceElement = React.forwardRef(
 							onMouseEnter={() => setButtonActive && setButtonActive(true)}
 							onMouseLeave={() => setButtonActive && setButtonActive(false)}
 						>
-							{' '}
-							clear
+							Clear
 						</button>
 					</form>
 				</div>
@@ -153,10 +177,11 @@ const SourceElement = React.forwardRef(
 
 const Source = React.forwardRef(({uniforms}: SourceProps, ref) => {
 	const {sourceRef, cursorRef}: Record<string, React.RefObject<HTMLDivElement>> = ref;
-	const [text, setText] = React.useState<string>('orange');
+	const [text, setText] = React.useState<string>('DarkGray');
 	const [contrastColor, setContrastColor] = React.useState<string>('black');
 	const [buttonActive, setButtonActive] = React.useState<boolean>(false);
 	const [inputFocused, setInputFocused] = React.useState<boolean>(false);
+	const [windowWidth, setWindowWidth] = React.useState<number>(1440);
 
 	React.useEffect(() => {
 		const color: RGBA = parseColorFromString(text);
@@ -165,8 +190,20 @@ const Source = React.forwardRef(({uniforms}: SourceProps, ref) => {
 			const luminance: number = luminanceFromRGBA(color, {r: 1, g: 1, b: 1});
 			const contrastColor: string = luminance > 0.5 ? 'black' : 'white';
 			setContrastColor(contrastColor);
+			console.log({uColor: uniforms.current.uColor.value, contrastColor});
 		}
 	}, [text]);
+
+	React.useEffect(() => {
+		const handleResize = () => {
+			setWindowWidth(window.innerWidth);
+		};
+		window.addEventListener('resize', handleResize);
+		handleResize();
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
 	return (
 		<>
 			<SourceElement
@@ -175,6 +212,7 @@ const Source = React.forwardRef(({uniforms}: SourceProps, ref) => {
 				buttonActive={buttonActive}
 				inputFocused={inputFocused}
 				contrastColor={contrastColor}
+				windowWidth={windowWidth}
 			/>
 			<SourceElement
 				ref={cursorRef}
@@ -186,6 +224,7 @@ const Source = React.forwardRef(({uniforms}: SourceProps, ref) => {
 				inputFocused={inputFocused}
 				setInputFocused={setInputFocused}
 				contrastColor={contrastColor}
+				windowWidth={windowWidth}
 			/>
 		</>
 	);

@@ -47,13 +47,19 @@ const shift = (bghsl: HSL, fgl: number, targetRatio: number): RGB => {
 };
 
 const makeColorAccessible = (bg: RGB, fg: RGB, complianceLevel: COMPLIANCE_LEVEL): RGB => {
-	if (complianceLevel === COMPLIANCE_LEVEL.NONE) return bg;
+	// console.log({complianceLevel});
+	if (complianceLevel === 'NONE') return bg;
 	const bghsl = RGBToHSL(bg);
 	const fghsl = RGBToHSL(fg);
 	const ratio = contrastRatio(bghsl.l, fghsl.l);
 	const targetRatio = minComplianceRatio[complianceLevel];
+	console.log({ratio});
 	if (ratio >= targetRatio) return bg;
-	return shift(bghsl, fghsl.l, targetRatio);
+	const newbg = shift(bghsl, fghsl.l, targetRatio);
+	const newBgHsl = RGBToHSL(newbg);
+	const newRatio = contrastRatio(newBgHsl.l, fghsl.l);
+	console.log({complianceLevel, newRatio});
+	return newbg;
 };
 
 const ColorRatioCalc = ({foregroundColor, backgroundColor, complianceLevel}: Props) => {
