@@ -200,51 +200,66 @@ float newLuminance(float fgl, float target, bool up) {
 }
 
 vec3 shiftHSL(vec3 bg, float fgl, float targetRatio) {
-	bool up = shouldLightenBackground(bg.z, fgl);
+  vec3 bghsl = rgbTohsl(bg);
+	bool up = shouldLightenBackground(bghsl.z, fgl);
   float newLum = newLuminance(fgl, targetRatio, up);
-  bg.z = up ? max(bg.z, newLum) : min(bg.z, newLum);
-  vec3 rgb = hslTorgb(bg);
+  bghsl.z = up ? max(bghsl.z, newLum) : min(bghsl.z, newLum);
+  vec3 rgb = hslTorgb(bghsl);
   return up ? min(rgb + (newLum * .5), 1.0): rgb * (1.0 + rgb);
 }
 
 vec3 shiftHSP(vec3 bg, float fgl, float targetRatio) {
-	bool up = shouldLightenBackground(bg.z, fgl);
+  vec3 bghsp = rgbTohsp(bg);
+	bool up = shouldLightenBackground(bghsp.z, fgl);
   float newLum = newLuminance(fgl, targetRatio, up);
-  bg.z = up ? max(bg.z, newLum) : min(bg.z, newLum);
-  vec3 rgb = hspTorgb(bg);
- return up ? min(rgb + (newLum * .5), 1.0): rgb * (1.0 + rgb);
+  bghsp.z = up ? max(bghsp.z, newLum) : min(bghsp.z, newLum);
+  vec3 rgb = hspTorgb(bghsp);
+  return up ? min(rgb + (newLum * .5), 1.0): rgb * (1.0 + rgb);
 }
 
 vec3 shiftHSV(vec3 bg, float fgl, float targetRatio) {
-	bool up = shouldLightenBackground(bg.z, fgl);
+  vec3 bghsv = rgbTohsv(bg);
+	bool up = shouldLightenBackground(bghsv.z, fgl);
   float newLum = newLuminance(fgl, targetRatio, up);
-  bg.z = up ? max(bg.z, newLum) : min(bg.z, newLum);
-  vec3 rgb = hsvTorgb(bg);
+  bghsv.z = up ? max(bghsv.z, newLum) : min(bghsv.z, newLum);
+  vec3 rgb = hsvTorgb(bghsv);
  return up ? min(rgb + (newLum * .5), 1.0): rgb * (1.0 + rgb);
 }
 
+float applyGammaCorrection(float colorChannel) {
+  if (colorChannel <= 0.03928) return colorChannel / 1.055;
+  return pow((colorChannel + 0.055) / 1.055, 2.4);
+}
+
+float W3RelativeLuminance(vec3 rgb) {
+  float r = applyGammaCorrection(rgb.r);
+  float g = applyGammaCorrection(rgb.g);
+  float b = applyGammaCorrection(rgb.b);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b; // Correction for perceptual color differences
+}
+
 vec3 makeColorAccessibleHSL(vec3 bg, vec3 fg, int complianceLevel) {
-  vec3 bghsl = rgbTohsl(bg);
-	vec3 fghsl = rgbTohsl(fg);
-	float ratio = contrastRatio(bghsl.z, fghsl.z);
+  float bgl = W3RelativeLuminance(bg);
+  float fgl = W3RelativeLuminance(fg);
+	float ratio = contrastRatio(bgl, fgl);
 	float targetRatio = minComplianceRatio(complianceLevel);
-	return shiftHSL(bghsl, fghsl.z, targetRatio);
+	return shiftHSL(bg, fgl, targetRatio);
 }
 
 vec3 makeColorAccessibleHSP(vec3 bg, vec3 fg, int complianceLevel) {
-  vec3 bghsp = rgbTohsp(bg);
-	vec3 fghsp = rgbTohsp(fg);
-	float ratio = contrastRatio(bghsp.z, fghsp.z);
+  float bgl = W3RelativeLuminance(bg);
+  float fgl = W3RelativeLuminance(fg);
+	float ratio = contrastRatio(bgl, fgl);
 	float targetRatio = minComplianceRatio(complianceLevel);
-	return shiftHSP(bghsp, fghsp.z, targetRatio);
+	return shiftHSP(bg, fgl, targetRatio);
 }
 
 vec3 makeColorAccessibleHSV(vec3 bg, vec3 fg, int complianceLevel) {
-  vec3 bghsv = rgbTohsv(bg);
-	vec3 fghsv = rgbTohsv(fg);
-	float ratio = contrastRatio(bghsv.z, fghsv.z);
+  float bgl = W3RelativeLuminance(bg);
+  float fgl = W3RelativeLuminance(fg);
+	float ratio = contrastRatio(bgl, fgl);
 	float targetRatio = minComplianceRatio(complianceLevel);
-	return  shiftHSV(bghsv, fghsv.z, targetRatio);
+	return shiftHSV(bg, fgl, targetRatio);
 }
 
 vec3 makeColorAccessible(vec3 bg, vec3 fg, int complianceLevel, vec2 st) {
