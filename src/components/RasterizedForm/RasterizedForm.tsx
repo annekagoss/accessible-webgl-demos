@@ -13,6 +13,7 @@ import {useMouse} from '../../hooks/mouse';
 import {useRasterizeToGL} from '../../hooks/rasterize';
 import {useWindowSize} from '../../hooks/resize';
 import vertexShader from '../../../lib/gl/shaders/base.vert';
+import MotionControls from '../MotionControls/MotionControls';
 
 const INITIAL_UNIFORMS: UniformSettings = {
 	...BASE_UNIFORMS,
@@ -176,6 +177,7 @@ const RasterizedForm = () => {
 				}}
 				uniforms={uniforms}
 			/>
+			<MotionControls />
 		</div>
 	);
 };

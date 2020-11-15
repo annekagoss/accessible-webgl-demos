@@ -1,5 +1,6 @@
-import { useRef, useEffect } from 'react';
-import { MAX_IDLE_TIME } from '../../lib/gl/settings';
+import {useRef, useEffect, useContext} from 'react';
+import {MotionContext} from '../components/App';
+import {MAX_IDLE_TIME} from '../../lib/gl/settings';
 
 interface UsePauseWhileOffScreenProps {
 	canvasRef: React.MutableRefObject<HTMLCanvasElement>;
@@ -13,9 +14,8 @@ export const useAnimationFrame = (
 	canvasRef: React.MutableRefObject<HTMLCanvasElement>,
 	callback: (time: number, pingPing: number) => void
 ) => {
-	const allowMotion: boolean = window.matchMedia(
-		'(prefers-reduced-motion: no-preference)'
-	).matches;
+	const allowMotion: boolean = window.matchMedia('(prefers-reduced-motion: no-preference)')
+		.matches;
 
 	if (!allowMotion) {
 		useEffect(() => {
@@ -27,15 +27,18 @@ export const useAnimationFrame = (
 		return;
 	}
 
+	const [motion] = useContext(MotionContext);
+
 	const requestRef: React.MutableRefObject<number> = useRef<number>(0);
 	const previousTimeRef: React.MutableRefObject<number> = useRef<number>(0);
 	const pingPongRef: React.MutableRefObject<number> = useRef<number>(0);
 	const idleRef: React.MutableRefObject<boolean> = useRef<boolean>(false);
 	const idleTimerRef: React.MutableRefObject<number> = useRef<number>(0);
+	const motionRef: React.MutableRefObject<boolean> = useRef<boolean>(motion);
 
 	const animate = (time) => {
 		// Keep animation paused while idle
-		if (idleRef.current) return;
+		if (idleRef.current || !motionRef.current) return;
 
 		// Pause animation while idle
 		if (idleTimerRef.current > MAX_IDLE_TIME) {
@@ -46,12 +49,9 @@ export const useAnimationFrame = (
 
 		// Run animation loop
 		idleTimerRef.current++;
-		if (previousTimeRef.current !== undefined)
-			callback(time, pingPongRef.current);
+		if (previousTimeRef.current !== undefined) callback(time, pingPongRef.current);
 		previousTimeRef.current = time;
-		pingPongRef.current = pingPongRef.current = Math.abs(
-			pingPongRef.current - 1
-		);
+		pingPongRef.current = pingPongRef.current = Math.abs(pingPongRef.current - 1);
 		requestRef.current = requestAnimationFrame(animate);
 	};
 
@@ -59,6 +59,15 @@ export const useAnimationFrame = (
 		requestRef.current = requestAnimationFrame(animate);
 		return () => cancelAnimationFrame(requestRef.current);
 	}, []);
+
+	useEffect(() => {
+		motionRef.current = motion;
+		if (!motion) {
+			cancelAnimationFrame(requestRef.current);
+		} else {
+			requestRef.current = requestAnimationFrame(animate);
+		}
+	}, [motion]);
 
 	usePauseWhileOffScreen({
 		canvasRef,
@@ -95,7 +104,7 @@ const handleScroll = ({
 	animate,
 }: UsePauseWhileOffScreenProps) => {
 	if (!canvasRef.current) return;
-	const { y, height } = canvasRef.current.getBoundingClientRect() as DOMRect;
+	const {y, height} = canvasRef.current.getBoundingClientRect() as DOMRect;
 	const topAboveBottom: boolean = y < window.innerHeight;
 	const bottomBelowTop: boolean = y + height > 0;
 	const inView: boolean = topAboveBottom && bottomBelowTop;

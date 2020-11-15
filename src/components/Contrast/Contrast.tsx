@@ -11,7 +11,6 @@ import fragmentShader from '../../../lib/gl/shaders/gx.frag';
 import AccessibleContrast from '../AccessibleContrast/AccessibleContrast';
 
 import styles from './Contrast.module.scss';
-import {TorusGeometry, Vector3} from 'three';
 
 interface Props {}
 

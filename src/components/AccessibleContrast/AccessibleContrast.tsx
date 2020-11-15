@@ -3,6 +3,7 @@ import {UniformSettings, Vector2} from '../../../types';
 import ContrastForm from './ContrastForm/ContrastForm';
 
 import styles from './AccessibleContrast.module.scss';
+import MotionControls from '../MotionControls/MotionControls';
 
 interface Props {
 	size: React.MutableRefObject<Vector2>;
@@ -37,6 +38,7 @@ const AccessibleContrast = forwardRef(
 					role='img'
 				/>
 				<ContrastForm updateUniform={updateUniform} />
+				<MotionControls />
 			</div>
 		);
 	}
