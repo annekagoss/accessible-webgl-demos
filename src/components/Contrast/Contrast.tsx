@@ -10,7 +10,7 @@ import vertexShader from '../../../lib/gl/shaders/base.vert';
 import fragmentShader from '../../../lib/gl/shaders/gx.frag';
 import AccessibleContrast from '../AccessibleContrast/AccessibleContrast';
 
-import styles from './Background.module.scss';
+import styles from './Contrast.module.scss';
 import {TorusGeometry, Vector3} from 'three';
 
 interface Props {}
@@ -76,7 +76,7 @@ const render = ({gl, uniformLocations, uniforms, time, mousePos}: RenderProps) =
 	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 };
 
-const BaseCanvas = () => {
+const Contrast = () => {
 	const uniforms = React.useRef<UniformSettings>(INITIAL_UNIFORMS);
 	const canvasRef: React.RefObject<HTMLCanvasElement> = React.useRef<HTMLCanvasElement>();
 	const size: React.MutableRefObject<Vector2> = React.useRef<Vector2>({
@@ -131,4 +131,4 @@ const BaseCanvas = () => {
 	);
 };
 
-export default BaseCanvas;
+export default Contrast;

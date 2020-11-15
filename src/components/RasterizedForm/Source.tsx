@@ -116,6 +116,8 @@ const SourceElement = React.forwardRef(
 						</label>
 						<input
 							type='text'
+							aria-label='Type a color'
+							name='color-field'
 							id='color-field'
 							spellCheck='false'
 							style={{
@@ -166,7 +168,7 @@ const SourceElement = React.forwardRef(
 							onMouseEnter={() => setButtonActive && setButtonActive(true)}
 							onMouseLeave={() => setButtonActive && setButtonActive(false)}
 						>
-							Clear
+							Clear Color
 						</button>
 					</form>
 				</div>
@@ -190,7 +192,6 @@ const Source = React.forwardRef(({uniforms}: SourceProps, ref) => {
 			const luminance: number = luminanceFromRGBA(color, {r: 1, g: 1, b: 1});
 			const contrastColor: string = luminance > 0.5 ? 'black' : 'white';
 			setContrastColor(contrastColor);
-			console.log({uColor: uniforms.current.uColor.value, contrastColor});
 		}
 	}, [text]);
 

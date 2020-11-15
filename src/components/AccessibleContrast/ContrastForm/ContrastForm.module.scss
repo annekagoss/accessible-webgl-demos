@@ -16,13 +16,31 @@
 	justify-content: center;
 }
 
-.label {
+.label.label,
+.labelSmall.labelSmall {
 	text-align: center;
+	font-family: 'Roboto';
+	font-weight: bold;
+}
+
+.label.label {
+	font-size: 40px;
+}
+
+.labelSmall.labelSmall {
+	font-size: 20px;
+}
+
+.colorLabel.colorLabel {
+	font-size: 20px;
+	margin-bottom: 20px;
 }
 
 .switchThumb,
 .label.label,
 .label.label.focused,
+.labelSmall.labelSmall,
+.labelSmall.labelSmall.focused,
 .radio.radio.radio {
 	color: black;
 
@@ -66,4 +84,13 @@
 	.label {
 		margin-bottom: 10px;
 	}
+}
+
+.hidden {
+	position: absolute;
+	left: -10000px;
+	top: auto;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
 }

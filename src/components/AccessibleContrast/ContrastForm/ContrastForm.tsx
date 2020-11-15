@@ -6,7 +6,6 @@ import ComplianceLevel, {COMPLIANCE_LEVEL} from './ComplianceLevel';
 import Colors, {RGB} from './Colors';
 
 import styles from './ContrastForm.module.scss';
-import ColorRatioCalc from './ColorRatioCalc';
 import {normalizeRGB} from '../../../utils/color';
 
 interface Props {
@@ -63,11 +62,6 @@ const ControlForm = ({updateUniform}: Props) => {
 				color3={color3}
 				setColor3={setColor3}
 			/>
-			{/* <ColorRatioCalc
-				foregroundColor={invertedText ? {r: 255, g: 255, b: 255} : {r: 0, g: 0, b: 0}}
-				backgroundColor={color1}
-				complianceLevel={complianceLevel}
-			/> */}
 		</div>
 	);
 };

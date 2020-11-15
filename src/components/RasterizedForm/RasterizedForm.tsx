@@ -71,6 +71,9 @@ const render = ({gl, uniformLocations, uniforms, time, mousePos}: RenderProps) =
 	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 };
 
+const ARIA_LABEL =
+	'An animated graphic of text and an input field that are distorted as if they are underwater. Use the controls to change the colors of the text and the shapes.';
+
 const RasterizedForm = () => {
 	const uniforms = React.useRef<UniformSettings>(INITIAL_UNIFORMS);
 	const canvasRef: React.RefObject<HTMLCanvasElement> = React.useRef<HTMLCanvasElement>();
@@ -152,7 +155,12 @@ const RasterizedForm = () => {
 	});
 
 	return (
-		<div className={styles.canvasContainer} ref={scrollRef}>
+		<div
+			className={styles.canvasContainer}
+			ref={scrollRef}
+			tabIndex={0}
+			aria-label={ARIA_LABEL}
+		>
 			<canvas
 				ref={canvasRef}
 				className={styles.fullScreenCanvas}

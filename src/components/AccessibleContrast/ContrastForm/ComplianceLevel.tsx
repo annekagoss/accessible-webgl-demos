@@ -23,12 +23,13 @@ const ComplianceLevel = ({complianceLevel, setComplianceLevel}: Props) => {
 					root: styles.label,
 					focused: styles.focused,
 				}}
+				component='legend'
 			>
-				Contrast Requirement
+				Contrast Compliance Level
 			</FormLabel>
 			<RadioGroup
-				aria-label='text color'
-				name='text-color'
+				aria-label='contrast compliance level'
+				name='contrast-compliance-level'
 				value={complianceLevel}
 				onChange={(_: React.ChangeEvent<HTMLInputElement>, value: string) => {
 					setComplianceLevel(COMPLIANCE_LEVEL[value]);
@@ -50,7 +51,7 @@ const ComplianceLevel = ({complianceLevel, setComplianceLevel}: Props) => {
 					}
 					classes={{
 						root: styles.radioControl,
-						label: styles.label,
+						label: styles.labelSmall,
 					}}
 					label={COMPLIANCE_LEVEL.NONE}
 				/>
@@ -67,7 +68,7 @@ const ComplianceLevel = ({complianceLevel, setComplianceLevel}: Props) => {
 					}
 					classes={{
 						root: styles.radioControl,
-						label: styles.label,
+						label: styles.labelSmall,
 					}}
 					label={COMPLIANCE_LEVEL.AA}
 				/>
@@ -84,7 +85,7 @@ const ComplianceLevel = ({complianceLevel, setComplianceLevel}: Props) => {
 					}
 					classes={{
 						root: styles.radioControl,
-						label: styles.label,
+						label: styles.labelSmall,
 					}}
 					label={COMPLIANCE_LEVEL.AAA}
 				/>

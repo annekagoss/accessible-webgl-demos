@@ -1,4 +1,4 @@
-import React, {forwardRef, useCallback} from 'react';
+import React, {forwardRef, useCallback, useMemo} from 'react';
 import {UniformSettings, Vector2} from '../../../types';
 import ContrastForm from './ContrastForm/ContrastForm';
 
@@ -8,6 +8,9 @@ interface Props {
 	size: React.MutableRefObject<Vector2>;
 	uniforms: React.MutableRefObject<UniformSettings>;
 }
+
+const ARIA_LABEL =
+	'An animated graphic of three colors softly blurred together and moving slowly. Use the controls to make the contrast between the colors and the text comply with accessibility standards.';
 
 const AccessibleContrast = forwardRef(
 	({size, uniforms}: Props, ref: React.RefObject<HTMLCanvasElement>) => {
@@ -25,7 +28,7 @@ const AccessibleContrast = forwardRef(
 		);
 
 		return (
-			<>
+			<div tabIndex={0} aria-label={ARIA_LABEL}>
 				<canvas
 					ref={ref}
 					width={size.current.x}
@@ -34,7 +37,7 @@ const AccessibleContrast = forwardRef(
 					role='img'
 				/>
 				<ContrastForm updateUniform={updateUniform} />
-			</>
+			</div>
 		);
 	}
 );

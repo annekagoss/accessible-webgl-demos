@@ -1,0 +1,23 @@
+.navigation {
+	display: inline-block;
+	display: flex;
+	flex-direction: column;
+	list-style-type: none;
+	padding-inline-start: 0;
+}
+
+.navItem {
+	font-size: 3rem;
+	font-weight: bold;
+	user-select: none;
+	cursor: pointer;
+	display: inline-block;
+	margin-bottom: 0.5rem;
+	color: black;
+	text-decoration: none;
+
+	&.active,
+	&:hover {
+		text-decoration: underline;
+	}
+}

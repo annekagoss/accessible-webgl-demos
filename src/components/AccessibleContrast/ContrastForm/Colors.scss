@@ -2,20 +2,22 @@
 .MuiFormLabel-root.MuiFormLabel-root.Mui-focused,
 .MuiInputBase-root.MuiInputBase-root {
 	color: black;
+	font-family: 'Roboto';
+	font-weight: bold;
 
 	.inverted & {
 		color: white;
 	}
 }
 
-.MuiInput-underline:before {
-	border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+.MuiInput-underline.MuiInput-underline:before {
+	border-bottom: 2px solid rgba(0, 0, 0, 0.42);
 	.inverted & {
-		border-bottom: 1px solid rgba(255, 255, 255, 0.42);
+		border-bottom: 2px solid rgba(255, 255, 255, 0.42);
 	}
 }
 
-.MuiInput-underline:hover:not(.Mui-disabled):before {
+.MuiInput-underline.MuiInput-underline:hover:not(.Mui-disabled):before {
 	border-bottom: 2px solid rgba(0, 0, 0, 0.87);
 
 	.inverted & {
@@ -24,8 +26,8 @@
 }
 
 .MuiInput-underline.MuiInput-underline:after {
-	border-bottom: solid 2px black;
+	border-bottom: solid 4px black;
 	.inverted & {
-		border-bottom: solid 2px white;
+		border-bottom: solid 4px white;
 	}
 }

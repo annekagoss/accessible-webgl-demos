@@ -14,7 +14,6 @@ const InvertTextSwitch = ({invertedText, setInvertedText}: Props) => (
 			control={
 				<Switch
 					checked={invertedText}
-					aria-label={'invert text'}
 					color='default'
 					classes={{
 						thumb: styles.switchThumb,
@@ -28,8 +27,9 @@ const InvertTextSwitch = ({invertedText, setInvertedText}: Props) => (
 			label='Invert Text'
 			classes={{
 				root: styles.invertControl,
-				label: styles.label,
+				label: styles.labelSmall,
 			}}
+			value={invertedText}
 		/>
 	</FormControl>
 );
