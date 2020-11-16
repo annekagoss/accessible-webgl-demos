@@ -194,36 +194,9 @@ bool shouldLightenBackground(float bgl, float fgl) {
 
 float newLuminance(float fgl, float target, bool up) {
 	if (up) {
-		return (target * (fgl + 0.075)) + 0.075;
+		return (target * (fgl + 0.075)) + 0.05;
 	}
-	return ((fgl + 0.05 - (target * 0.05)) / target) + 0.075;
-}
-
-vec3 shiftHSL(vec3 bg, float fgl, float targetRatio) {
-  vec3 bghsl = rgbTohsl(bg);
-	bool up = shouldLightenBackground(bghsl.z, fgl);
-  float newLum = newLuminance(fgl, targetRatio, up);
-  bghsl.z = up ? max(bghsl.z, newLum) : min(bghsl.z, newLum);
-  vec3 rgb = hslTorgb(bghsl);
-  return up ? min(rgb + (newLum * .5), 1.0): rgb * (1.0 + rgb);
-}
-
-vec3 shiftHSP(vec3 bg, float fgl, float targetRatio) {
-  vec3 bghsp = rgbTohsp(bg);
-	bool up = shouldLightenBackground(bghsp.z, fgl);
-  float newLum = newLuminance(fgl, targetRatio, up);
-  bghsp.z = up ? max(bghsp.z, newLum) : min(bghsp.z, newLum);
-  vec3 rgb = hspTorgb(bghsp);
-  return up ? min(rgb + (newLum * .5), 1.0): rgb * (1.0 + rgb);
-}
-
-vec3 shiftHSV(vec3 bg, float fgl, float targetRatio) {
-  vec3 bghsv = rgbTohsv(bg);
-	bool up = shouldLightenBackground(bghsv.z, fgl);
-  float newLum = newLuminance(fgl, targetRatio, up);
-  bghsv.z = up ? max(bghsv.z, newLum) : min(bghsv.z, newLum);
-  vec3 rgb = hsvTorgb(bghsv);
- return up ? min(rgb + (newLum * .5), 1.0): rgb * (1.0 + rgb);
+	return ((fgl + 0.05 - (target * 0.05)) / target);
 }
 
 float applyGammaCorrection(float colorChannel) {
@@ -238,12 +211,40 @@ float W3RelativeLuminance(vec3 rgb) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b; // Correction for perceptual color differences
 }
 
+vec3 shiftHSL(vec3 bg, float fgl, float targetRatio) {
+  vec3 bghsl = rgbTohsl(bg);
+	bool up = shouldLightenBackground(bghsl.z, fgl);
+  float newLum = newLuminance(fgl, targetRatio, up);
+  bghsl.z = up ? max(bghsl.z, newLum) : min(bghsl.z, newLum);
+  vec3 rgb = hslTorgb(bghsl);
+  return up ? min(rgb + (newLum * .5), 1.0): rgb;
+}
+
+vec3 shiftHSP(vec3 bg, float fgl, float targetRatio) {
+  vec3 bghsp = rgbTohsp(bg);
+	bool up = shouldLightenBackground(bghsp.z, fgl);
+  float newLum = newLuminance(fgl, targetRatio, up) + .1;
+  bghsp.z = up ? max(bghsp.z, newLum) : min(bghsp.z, newLum);
+  vec3 rgb = hspTorgb(bghsp);
+  return up ? min(rgb + (newLum * .5), 1.0): rgb;
+}
+
+vec3 shiftHSV(vec3 bg, float fgl, float targetRatio) {
+  vec3 bghsv = rgbTohsv(bg);
+	bool up = shouldLightenBackground(bghsv.z, fgl);
+  float newLum = newLuminance(fgl, targetRatio, up);
+  bghsv.z = up ? max(bghsv.z, newLum) : min(bghsv.z, newLum);
+  vec3 rgb = hsvTorgb(bghsv);
+ return up ? min(rgb + (newLum * .5), 1.0): rgb;
+}
+
 vec3 makeColorAccessibleHSL(vec3 bg, vec3 fg, int complianceLevel) {
   float bgl = W3RelativeLuminance(bg);
   float fgl = W3RelativeLuminance(fg);
 	float ratio = contrastRatio(bgl, fgl);
 	float targetRatio = minComplianceRatio(complianceLevel);
-	return shiftHSL(bg, fgl, targetRatio);
+	vec3 newbg = shiftHSL(bg, fgl, targetRatio);
+  return mix(newbg, bg, clamp(pow(ratio / targetRatio, 2.0), 0.0, 1.0));
 }
 
 vec3 makeColorAccessibleHSP(vec3 bg, vec3 fg, int complianceLevel) {
@@ -251,7 +252,8 @@ vec3 makeColorAccessibleHSP(vec3 bg, vec3 fg, int complianceLevel) {
   float fgl = W3RelativeLuminance(fg);
 	float ratio = contrastRatio(bgl, fgl);
 	float targetRatio = minComplianceRatio(complianceLevel);
-	return shiftHSP(bg, fgl, targetRatio);
+	vec3 newbg = shiftHSP(bg, fgl, targetRatio);
+  return mix(newbg, bg, clamp(pow(ratio / targetRatio, 2.0), 0.0, 1.0));
 }
 
 vec3 makeColorAccessibleHSV(vec3 bg, vec3 fg, int complianceLevel) {
@@ -259,15 +261,16 @@ vec3 makeColorAccessibleHSV(vec3 bg, vec3 fg, int complianceLevel) {
   float fgl = W3RelativeLuminance(fg);
 	float ratio = contrastRatio(bgl, fgl);
 	float targetRatio = minComplianceRatio(complianceLevel);
-	return shiftHSV(bg, fgl, targetRatio);
+	vec3 newbg = shiftHSV(bg, fgl, targetRatio);
+  return mix(newbg, bg, clamp(pow(ratio / targetRatio, 2.0), 0.0, 1.0));
 }
 
 vec3 makeColorAccessible(vec3 bg, vec3 fg, int complianceLevel, vec2 st) {
 	if (complianceLevel == 0) return bg;
-  // if (st.x < ((1./3.))) return makeColorAccessibleHSL(bg, fg, complianceLevel);
-  // if (st.x < ((2./3.))) return makeColorAccessibleHSP(bg, fg, complianceLevel);
-  // return makeColorAccessibleHSV(bg, fg, complianceLevel);
-  return makeColorAccessibleHSP(bg, fg, complianceLevel);
+  if (st.x < ((1./3.))) return makeColorAccessibleHSL(bg, fg, complianceLevel);
+  if (st.x < ((2./3.))) return makeColorAccessibleHSP(bg, fg, complianceLevel);
+  return makeColorAccessibleHSV(bg, fg, complianceLevel);
+  // return makeColorAccessibleHSP(bg, fg, complianceLevel);
 }
 
 #pragma glslify:export(makeColorAccessible)
