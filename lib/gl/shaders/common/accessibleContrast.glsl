@@ -208,8 +208,7 @@ float W3RelativeLuminance(vec3 rgb) {
   float r = applyGammaCorrection(rgb.r);
   float g = applyGammaCorrection(rgb.g);
   float b = applyGammaCorrection(rgb.b);
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b; // Correction for perceptual color differences
-}
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b; // Gamma correction
 
 vec3 shiftHSL(vec3 bg, float fgl, float targetRatio) {
   vec3 bghsl = rgbTohsl(bg);
